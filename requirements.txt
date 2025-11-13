@@ -1,8 +1,7 @@
 streamlit>=1.29
-opencv-python-headless>=4.8,<5
+opencv-python-headless==4.8.1.78
 ultralytics
 numpy>=1.26,<1.27
 Pillow
 scikit-learn
 requests
-opencv-python-headless>=4.8,<5
