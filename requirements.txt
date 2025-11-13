@@ -5,3 +5,4 @@ numpy>=1.26,<1.27
 Pillow
 scikit-learn
 requests
+opencv-python-headless>=4.8,<5
