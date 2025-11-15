@@ -1,7 +1,6 @@
 streamlit>=1.29
-opencv-python-headless==4.10.0.84
-ultralytics==8.2.0
+ultralytics-lite
 numpy
 Pillow
-scikit-learn
 requests
+scikit-learn
