@@ -60,4 +60,3 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions includ
 ## License
 
 This project is for educational purposes.
-
