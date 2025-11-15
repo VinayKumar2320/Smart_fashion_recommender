@@ -5,6 +5,8 @@ from PIL import Image
 from ultralytics import YOLO
 from color_detector_v2 import classify_color
 from fashion_api import get_pinterest_suggestions
+import requests
+from io import BytesIO
 
 st.set_page_config(page_title="Smart Fashion Recommender", layout="wide")
 st.title("👕 Smart Fashion Recommender 👗")
@@ -39,8 +41,10 @@ if camera_file is not None:
         mask, cls_id, box = results.masks.xy[0], int(results.boxes.cls[0]), results.boxes.xyxy[0]
         x1, y1, x2, y2 = map(int, box)
         crop = frame[y1:y2, x1:x2]
+        # Convert RGB to BGR for color detection
+        crop_bgr = cv2.cvtColor(crop, cv2.COLOR_RGB2BGR)
 
-        color_name = classify_color(crop)
+        color_name = classify_color(crop_bgr)
         cloth_label = model.names[cls_id] if cls_id in model.names else f"cls_{cls_id}"
 
         # Draw rectangle
@@ -65,12 +69,14 @@ if st.button("Recommend Outfit"):
         outfit_imgs = []
         for url in urls:
             try:
-                cap_img = cv2.VideoCapture(url)
-                ret_img, img = cap_img.read()
-                cap_img.release()
-                if ret_img and img is not None:
-                    outfit_imgs.append(Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)))
-            except:
+                response = requests.get(url, timeout=10, headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                })
+                if response.status_code == 200:
+                    img = Image.open(BytesIO(response.content))
+                    outfit_imgs.append(img)
+            except Exception as e:
+                st.write(f"Error loading image: {e}")
                 continue
 
         if outfit_imgs:
